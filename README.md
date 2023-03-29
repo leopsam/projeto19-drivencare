@@ -5,7 +5,7 @@ O objetivo deste projeto é desenvolver uma plataforma de agendamento de consult
 
 ### **Requisitos Funcionais**
 
-- [ ]  Os pacientes devem ser capazes de criar uma conta na plataforma e fazer login.
+- [ x]  Os pacientes devem ser capazes de criar uma conta na plataforma e fazer login.
 - [ ]  Os pacientes devem ser capazes de pesquisar médicos por nome, especialidade ou localização.
 - [ ]  Os pacientes devem ser capazes de visualizar as datas e horários disponíveis para cada médico.
 - [ ]  Os pacientes devem ser capazes de agendar uma consulta com um médico, escolhendo a data e horário disponível.

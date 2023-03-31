@@ -37,7 +37,7 @@ async function typeUser({ id, location, specialty }) {
       await userRepositories.createPatient({ user_id: id });  
 
   } else  if (user.type === 1){
-      console.log(chalk.magenta(`medical type user - id = ${id}`)) //delete line after
+      console.log(chalk.magenta(`Doctor type user - id = ${id}`)) //delete line after
 
       const { rows: [doctor] } = await userRepositories.doctorFindById(id); 
       if (doctor) throw new Error("Doctor already exists")
@@ -49,8 +49,32 @@ async function typeUser({ id, location, specialty }) {
   }  
 }
 
+async function searchDotor({ name, location, specialty }) {
+
+  if(name) {
+
+    const {rowCount, rows: doctor} = await userRepositories.searchDoctorByName(name);
+    if (!rowCount) throw new Error("There is no information on the doctor with that name");
+    return doctor;
+
+  }else if(location){
+
+    const {rowCount, rows: doctor} = await userRepositories.searchDoctorByLocation(location);
+    if (!rowCount) throw new Error("There is no information from the doctor with this location");
+    return doctor;
+
+  }else if(specialty){
+    
+    const {rowCount, rows: doctor} = await userRepositories.searchDoctorBySpecialty(specialty);
+    if (!rowCount) throw new Error("there is no information on the doctor with this specialty");
+    return doctor;
+
+  }  
+}
+
 export default {
   signup,
   signin,
-  typeUser
+  typeUser,
+  searchDotor
 };

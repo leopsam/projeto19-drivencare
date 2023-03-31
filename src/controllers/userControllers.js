@@ -53,8 +53,26 @@ async function typeUser(req, res) {
   }  
 }
 
+async function searchDotor(req, res) {
+  console.log(chalk.blue(`Running searchDotor user`)) //delete line after
+
+  const { name, location, specialty } = req.body; 
+
+  try {
+   const search = await userServices.searchDotor({name, location, specialty})
+
+    console.log(chalk.yellow(`searchDotor user ok`)) //delete line after
+    return res.status(200).send(search)
+  } catch (err) {
+
+    console.log(chalk.red(`searchDotor user error`)) //delete line after
+    return res.status(500).send(err.message);
+  }  
+}
+
 export default {
   signup,
   signin,
-  typeUser
+  typeUser,
+  searchDotor
 };

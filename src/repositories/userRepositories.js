@@ -1,5 +1,7 @@
 import connectionDb from "../config/database.js";
 
+//user's repositories
+
 async function findByEmail(email) {
   return await connectionDb.query(
     `    
@@ -28,7 +30,7 @@ async function findById(id) {
   );
 }
 
-//authentication repositories
+//session's repositories
 
 async function createSession({ token, user_id }) {
   await connectionDb.query(
@@ -50,7 +52,94 @@ async function findSessionByToken(token) {
   );
 }
 
-//patient repositories
+//doctor's repositories
+
+async function doctorFindById(id) {
+  return await connectionDb.query(
+    `    
+    SELECT * FROM doctors WHERE id=$1
+  `,
+    [id]
+  );
+}
+
+async function createDoctor({ location, user_id, specialty }) {  
+await connectionDb.query(
+  `
+      INSERT INTO doctors (location, user_id, specialty)
+      VALUES ($1, $2, $3)
+  `,
+  [location, user_id, specialty]
+);
+}
+
+async function doctorFindByIdUser(id) {
+return await connectionDb.query(
+  `    
+  SELECT * FROM doctors WHERE user_id=$1
+`,
+  [id]
+);
+}
+
+async function searchDoctorByLocation(location) {
+return await connectionDb.query(
+  `
+  SELECT doctors.id, users.name, doctors.location, doctors.specialty 
+  FROM doctors 
+  JOIN users ON doctors.user_id = users.id
+  WHERE doctors.location = $1
+`,
+  [location]
+);
+}
+
+async function searchDoctorByName(name) {
+return await connectionDb.query(
+  `
+  SELECT doctors.id, users.name, doctors.location, doctors.specialty 
+  FROM doctors 
+  JOIN users ON doctors.user_id = users.id
+  WHERE users.name = $1
+`,
+  [name]
+);
+}
+
+async function searchDoctorBySpecialty(specialty) {
+return await connectionDb.query(
+  `
+  SELECT doctors.id, users.name, doctors.location, doctors.specialty 
+  FROM doctors 
+  JOIN users ON doctors.user_id = users.id
+  WHERE doctors.specialty = $1
+`,
+  [specialty]
+);
+}
+
+async function doctorById(id) {
+return await connectionDb.query(
+  `    
+  SELECT doctors.id, users.name, doctors.location, doctors.specialty 
+  FROM doctors 
+  JOIN users ON doctors.user_id = users.id
+  WHERE doctors.id = $1
+`,
+  [id]
+);
+}
+
+//patient's repositories
+
+async function patientFindById(id) {
+  return await connectionDb.query(
+    `    
+    SELECT * FROM patients WHERE id=$1
+  `,
+    [id]
+  );
+}
 
 async function createPatient({ user_id }) {  
   await connectionDb.query(
@@ -62,79 +151,10 @@ async function createPatient({ user_id }) {
   );
 }
 
-async function patientFindById(id) {
+async function patientFindByIdUser(id) {
   return await connectionDb.query(
     `    
     SELECT * FROM patients WHERE user_id=$1
-  `,
-    [id]
-  );
-}
-
-//doctor's repositories
-
-async function createDoctor({ location, user_id, specialty }) {  
-  await connectionDb.query(
-    `
-        INSERT INTO doctors (location, user_id, specialty)
-        VALUES ($1, $2, $3)
-    `,
-    [location, user_id, specialty]
-  );
-}
-
-async function doctorFindById(id) {
-  return await connectionDb.query(
-    `    
-    SELECT * FROM doctors WHERE user_id=$1
-  `,
-    [id]
-  );
-}
-
-async function searchDoctorByLocation(location) {
-  return await connectionDb.query(
-    `
-    SELECT doctors.id, users.name, doctors.location, doctors.specialty 
-    FROM doctors 
-    JOIN users ON doctors.user_id = users.id
-    WHERE doctors.location = $1
-  `,
-    [location]
-  );
-}
-
-async function searchDoctorByName(name) {
-  return await connectionDb.query(
-    `
-    SELECT doctors.id, users.name, doctors.location, doctors.specialty 
-    FROM doctors 
-    JOIN users ON doctors.user_id = users.id
-    WHERE users.name = $1
-  `,
-    [name]
-  );
-}
-
-async function searchDoctorBySpecialty(specialty) {
-  return await connectionDb.query(
-    `
-    SELECT doctors.id, users.name, doctors.location, doctors.specialty 
-    FROM doctors 
-    JOIN users ON doctors.user_id = users.id
-    WHERE doctors.specialty = $1
-  `,
-    [specialty]
-  );
-}
-
-async function doctorById(id) {
-  return await connectionDb.query(
-    `    
-    SELECT doctors.id, users.name, doctors.location, doctors.specialty 
-    FROM doctors 
-    JOIN users ON doctors.user_id = users.id
-    WHERE doctors.id = $1
   `,
     [id]
   );
@@ -146,12 +166,14 @@ export default {
   createSession,
   findById,
   findSessionByToken,
+  doctorFindById, 
   createDoctor,
-  doctorFindById,
-  patientFindById,
-  createPatient,
+  doctorFindByIdUser,
   searchDoctorByLocation,
   searchDoctorByName,
   searchDoctorBySpecialty,
-  doctorById,  
+  doctorById,
+  patientFindById,
+  createPatient,
+  patientFindByIdUser
 };

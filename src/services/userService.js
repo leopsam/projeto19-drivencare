@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import userRepositories from "../repositories/userRepositories.js";
 import { v4 as uuidV4 } from "uuid";
-import chalk from 'chalk';
 import horary from '../utils/constantes.js'
 
 async function signup({ name, email, password, type }) {
@@ -30,16 +29,12 @@ async function typeUser({ id, location, specialty }) {
   if (!rowCount) throw new Error(`User does not exist, id - ${id} not found`);
 
   if (user.type === 2){
-      console.log(chalk.magenta(`patient type user - id = ${id}`)) //delete line after 
-
       const { rows: [patient] } = await userRepositories.patientFindById(id);   
       if (patient) throw new Error("Patient already exists")  
 
       await userRepositories.createPatient({ user_id: id });  
 
   } else  if (user.type === 1){
-      console.log(chalk.magenta(`Doctor type user - id = ${id}`)) //delete line after
-
       const { rows: [doctor] } = await userRepositories.doctorFindById(id); 
       if (doctor) throw new Error("Doctor already exists")
 
@@ -74,10 +69,8 @@ async function searchDotor({ name, location, specialty }) {
 }
 
 async function doctorHoraryById({ id }) {
-
   const { rows: [doctor] } = await userRepositories.doctorById(id);   
   return ([doctor, horary]);
-
 }
 
 export default {

@@ -10,24 +10,6 @@ async function create({ doctor_id, patient_id, time, status }) {
   );
 }
 
-async function doctorFindById(id) {
-  return await connectionDb.query(
-    `    
-    SELECT * FROM doctors WHERE id=$1
-  `,
-    [id]
-  );
-}
-
-async function patientFindById(id) {
-  return await connectionDb.query(
-    `    
-    SELECT * FROM patients WHERE id=$1
-  `,
-    [id]
-  );
-}
-
 async function getConsultations() {
   return await connectionDb.query(
     `    
@@ -91,8 +73,6 @@ async function getConsultationByFinished() {
 
 export default {
   create,
-  doctorFindById,
-  patientFindById,
   getConsultations,
   getConsultationByDoctor,
   getConsultationByPatient,

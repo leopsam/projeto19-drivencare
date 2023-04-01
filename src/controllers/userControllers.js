@@ -2,53 +2,41 @@ import userServices from "../services/userService.js";
 import chalk from 'chalk';
 
 async function signup(req, res) {
-  console.log(chalk.blue(`Running signup user`)) //delete line after
-
+  console.log(chalk.blue(`Running signup`)) 
   const { name, email, password, type } = req.body;
 
   try {
     await userServices.signup({name, email, password, type})
-
-    console.log(chalk.yellow(`Signup user ok`)) //delete line after
     return res.sendStatus(201);
-  } catch (err) {
 
-    console.log(chalk.red(`Signup user error`)) //delete line after
+  } catch (err) {
     return res.status(500).send(err.message);
   }  
 }
 
 async function signin(req, res) {
-  console.log(chalk.blue(`Running signin user`)) //delete line after
-
+  console.log(chalk.blue(`Running signin`)) 
   const { email, password } = req.body;
 
   try {
     const token = await userServices.signin({ email, password });
-
-    console.log(chalk.yellow(`Signin user ok`)) //delete line after
     return res.send({ token });
-  } catch (err) {
 
-    console.log(chalk.red(`Signin user error`)) //delete line after
+  } catch (err) {
     return res.status(500).send(err.message);
   }
 }
 
 async function typeUser(req, res) {
-  console.log(chalk.blue(`Running typeUser user`)) //delete line after
-
+  console.log(chalk.blue(`Running typeUser`))
   const { id } = req.params;
   const { location, specialty } = req.body; 
 
   try {
     await userServices.typeUser({id, location, specialty})
-
-    console.log(chalk.yellow(`typeUser user ok`)) //delete line after
     return res.sendStatus(201);
-  } catch (err) {
 
-    console.log(chalk.red(`typeUser user error`)) //delete line after
+  } catch (err) {
     return res.status(500).send(err.message);
   }  
 }
@@ -71,18 +59,14 @@ async function searchDotor(req, res) {
 }
 
 async function doctorById(req, res) {
-  console.log(chalk.blue(`Running doctorById user`)) //delete line after
-
+  console.log(chalk.blue(`Running doctorById`)) 
   const { id } = req.params; 
 
   try {
-   const doctor = await userServices.doctorHoraryById({id})
-
-    console.log(chalk.yellow(`doctorById user ok`)) //delete line after
+    const doctor = await userServices.doctorHoraryById({id})
     return res.status(200).send(doctor)
-  } catch (err) {
 
-    console.log(chalk.red(`doctorById user error`)) //delete line after
+  } catch (err) {
     return res.status(500).send(err.message);
   }  
 }

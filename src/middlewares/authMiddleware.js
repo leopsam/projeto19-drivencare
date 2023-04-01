@@ -2,7 +2,7 @@ import userRepositories from "../repositories/userRepositories.js";
 import chalk from 'chalk';
 
 async function authValidation(req, res, next) {
-  console.log(chalk.blue(`Running authenticated route`)) //delete line after
+  console.log(chalk.blue(`Passed Authentication Route`))
   const { authorization } = req.headers;
   const token = authorization?.replace("Bearer ", "");
 
@@ -15,10 +15,9 @@ async function authValidation(req, res, next) {
     const { rows: [user] } = await userRepositories.findById(session.user_id);
     if (!user) return res.status(401).send("User not found");
 
-    console.log(chalk.blue(`Authenticated route`)) //delete line after
-
     res.locals.user = user;
     next();
+    
   } catch (err) {
     res.status(500).send(err.message);
   }

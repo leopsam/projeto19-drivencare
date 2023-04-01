@@ -9,5 +9,6 @@ userRoutes.post('/signup', validateSchema(signupSchemma), userControllers.signup
 userRoutes.post('/signin', validateSchema(signinSchemma), userControllers.signin)
 userRoutes.post('/type/:id', userControllers.typeUser)
 userRoutes.get('/doctor/search', userControllers.searchDotor)
+userRoutes.get('/doctor/:id', userControllers.doctorById)
 
 export default userRoutes;

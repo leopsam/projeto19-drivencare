@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import userRepositories from "../repositories/userRepositories.js";
 import { v4 as uuidV4 } from "uuid";
 import chalk from 'chalk';
+import horary from '../utils/constantes.js'
 
 async function signup({ name, email, password, type }) {
   const { rowCount } = await userRepositories.findByEmail(email);
@@ -72,9 +73,17 @@ async function searchDotor({ name, location, specialty }) {
   }  
 }
 
+async function doctorHoraryById({ id }) {
+
+  const { rows: [doctor] } = await userRepositories.doctorById(id);   
+  return ([doctor, horary]);
+
+}
+
 export default {
   signup,
   signin,
   typeUser,
-  searchDotor
+  searchDotor,
+  doctorHoraryById
 };

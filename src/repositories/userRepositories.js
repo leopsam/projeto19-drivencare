@@ -128,6 +128,18 @@ async function searchDoctorBySpecialty(specialty) {
   );
 }
 
+async function doctorById(id) {
+  return await connectionDb.query(
+    `    
+    SELECT doctors.id, users.name, doctors.location, doctors.specialty 
+    FROM doctors 
+    JOIN users ON doctors.user_id = users.id
+    WHERE doctors.id = $1
+  `,
+    [id]
+  );
+}
+
 export default {
   findByEmail,
   create,
@@ -140,5 +152,6 @@ export default {
   createPatient,
   searchDoctorByLocation,
   searchDoctorByName,
-  searchDoctorBySpecialty  
+  searchDoctorBySpecialty,
+  doctorById,  
 };

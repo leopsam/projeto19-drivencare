@@ -70,9 +70,27 @@ async function searchDotor(req, res) {
   }  
 }
 
+async function doctorById(req, res) {
+  console.log(chalk.blue(`Running doctorById user`)) //delete line after
+
+  const { id } = req.params; 
+
+  try {
+   const doctor = await userServices.doctorHoraryById({id})
+
+    console.log(chalk.yellow(`doctorById user ok`)) //delete line after
+    return res.status(200).send(doctor)
+  } catch (err) {
+
+    console.log(chalk.red(`doctorById user error`)) //delete line after
+    return res.status(500).send(err.message);
+  }  
+}
+
 export default {
   signup,
   signin,
   typeUser,
-  searchDotor
+  searchDotor,
+  doctorById
 };

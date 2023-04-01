@@ -10,15 +10,16 @@ async function create({ doctor_id, patient_id, time, status }) {
   );
 }
 
-async function getConsultations() {
+async function getConsultationsByTime({time}) {
   return await connectionDb.query(
     `    
-    SELECT * FROM consultations 
-  `
+    SELECT * FROM consultations WHERE time = $1;
+  `,
+  [time]
   );
 }
 
-async function getConsultationByDoctor(id, status) {
+async function getConsultationByDoctor({id, status}) {
   return await connectionDb.query(
     `    
     SELECT consultations.id, consultations.status, consultations.time, users.name, doctors.specialty
@@ -31,7 +32,7 @@ async function getConsultationByDoctor(id, status) {
   );
 }
 
-async function getConsultationByPatient(id) {
+async function getConsultationByPatient({id}) {
   return await connectionDb.query(
     `    
     SELECT c.id, c.status, c.time, u.name, d.specialty
@@ -57,7 +58,7 @@ async function putConsultationById(id, status) {
   );
 }
 
-async function getConsultationByFinished() {
+async function getConsultationByDoctorFinished({id, status}) {
   return await connectionDb.query(
     `    
     SELECT c.status, c.time, u1.name as patient_name, u2.name as doctor_name, d.specialty
@@ -66,16 +67,33 @@ async function getConsultationByFinished() {
     JOIN users u1 ON p.user_id = u1.id
     JOIN doctors d ON c.doctor_id = d.id
     JOIN users u2 ON d.user_id = u2.id
-    WHERE c.status = 'gostoso';   
-  `
+    WHERE d.id = $1 AND c.status = $2  
+  `,
+  [id, status]
+  );
+}
+
+async function getConsultationByPatientFinished({id, status}) {
+  return await connectionDb.query(
+    `    
+    SELECT c.status, c.time, u1.name as patient_name, u2.name as doctor_name, d.specialty
+    FROM consultations c
+    JOIN patients p ON c.patient_id = p.id
+    JOIN users u1 ON p.user_id = u1.id
+    JOIN doctors d ON c.doctor_id = d.id
+    JOIN users u2 ON d.user_id = u2.id
+    WHERE p.id = $1 AND c.status = $2  
+  `,
+  [id, status]
   );
 }
 
 export default {
   create,
-  getConsultations,
+  getConsultationsByTime,
   getConsultationByDoctor,
   getConsultationByPatient,
   putConsultationById,
-  getConsultationByFinished
+  getConsultationByDoctorFinished,
+  getConsultationByPatientFinished
 };

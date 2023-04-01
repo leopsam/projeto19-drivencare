@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt";
 import userRepositories from "../repositories/userRepositories.js";
+import consultationRepositories from "../repositories/consultationRepositories.js";
 import { v4 as uuidV4 } from "uuid";
 import horary from '../utils/constantes.js'
+import moment from 'moment';
 
 async function signup({ name, email, password, type }) {
   const { rowCount } = await userRepositories.findByEmail(email);
@@ -29,13 +31,13 @@ async function typeUser({ id, location, specialty }) {
   if (!rowCount) throw new Error(`User does not exist, id - ${id} not found`);
 
   if (user.type === 2){
-      const { rows: [patient] } = await userRepositories.patientFindById(id);   
+      const { rows: [patient] } = await userRepositories.patientFindByIdUser(id);   
       if (patient) throw new Error("Patient already exists")  
 
       await userRepositories.createPatient({ user_id: id });  
 
   } else  if (user.type === 1){
-      const { rows: [doctor] } = await userRepositories.doctorFindById(id); 
+      const { rows: [doctor] } = await userRepositories.doctorFindByIdUser(id); 
       if (doctor) throw new Error("Doctor already exists")
 
       await userRepositories.createDoctor({ location, user_id: id, specialty });
@@ -65,11 +67,15 @@ async function searchDotor({ name, location, specialty }) {
     if (!rowCount) throw new Error("there is no information on the doctor with this specialty");
     return doctor;
 
+  }else{
+    throw new Error("No search parameter found");
   }  
 }
 
 async function doctorHoraryById({ id }) {
-  const { rows: [doctor] } = await userRepositories.doctorById(id);   
+  const { rowCount, rows: [doctor] } = await userRepositories.doctorById(id); 
+  
+  if (!rowCount) throw new Error("doctor id does not exist");
   return ([doctor, horary]);
 }
 

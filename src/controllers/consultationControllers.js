@@ -48,7 +48,7 @@ async function putConsultationById(req, res) {
 async function getConsultationByFinished(req, res) {
   console.log(chalk.blue(`Running getConsultationByFinished`))  
   const { id, type } = res.locals.user; 
-  const status = "scheduled"
+  const status = "finished"
 
   try {
     const consultations = await consultationService.getConsultationByFinishedDoctorOrPatient({id, status, type})
